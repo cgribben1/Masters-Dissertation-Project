@@ -22,7 +22,7 @@ count <- unlist(data.frame(chic$crime_count))
 bestglm(chic, family=poisson, IC="AIC",method="forward")
 bestglm(chic, family=negative.binomial(theta=10.197), IC="AIC",method="forward")
 
-################################################################################  Making models which take into account the Year, for reference in results... ################################################################################ 
+################################################################################  Making models which take into account the Year ################################################################################ 
 
 year <- unlist(data.frame(chic$year))
 
@@ -35,6 +35,9 @@ poissonmodel$deviance
 negbinmodel$deviance
 yearpoissonmodel$deviance
 yearnegbinmodel$deviance
+
+poissonmodel$null.deviance
+negbinmodel$null.deviance
 
 ################################################################################ Calculating Deviance Ratios ################################################################################ 
 
@@ -58,36 +61,7 @@ BIC(yearpoissonmodel)
 AIC(yearnegbinmodel)
 BIC(yearnegbinmodel)
 
-################################################################################ Calculating McFadden's pseudo R-squared ################################################################################ 
-
-intercept_model_poisson <- glm(chic$crime_count ~ 1, family = poisson)
-intercept_model_negbin <- glm.nb(chic$crime_count ~ 1)
-
-log_likelihood_intercept_poisson <- logLik(intercept_model_poisson)
-log_likelihood_intercept_negbin <- logLik(intercept_model_negbin)
-
-log_likelihood_model_poisson <- logLik(poissonmodel)
-log_likelihood_model_negbin <- logLik(negbinmodel)
-
-R_squared_McFadden_poisson <- 1 - (log_likelihood_model_poisson / log_likelihood_intercept_poisson)
-R_squared_McFadden_negbin <- 1 - (log_likelihood_model_negbin / log_likelihood_intercept_negbin)
-
-R_squared_McFadden_poisson
-R_squared_McFadden_negbin
-
-################################################################################ k-fold Cross Validation ################################################################################ 
-
-subchic <- chic[c(1,3,5,6,7)]
-
-cv_control <- trainControl(method = "cv", number = 5)
-
-cv_results_poisson <- train(crime_count ~ ., data = subchic, method = "glm", family = poisson (link = "log"), trControl = cv_control)
-cv_results_negbin <- train(crime_count ~ ., data = subchic, method = "glm", family = negative.binomial(theta = 5, link = "log"), trControl = cv_control)
-
-cv_results_poisson
-cv_results_negbin
-
-################################################################################ Plotting residuals etc. for model ################################################################################ 
+################################################################################ Residual Analysis ################################################################################ 
 
 plot(poissonmodel)
 
@@ -172,3 +146,4 @@ ggplot(plot_data, aes(x = Observed)) +
   theme_minimal() +
   theme(legend.position = "none")
 
+mean(chic_five$crime_count)*(365)*2

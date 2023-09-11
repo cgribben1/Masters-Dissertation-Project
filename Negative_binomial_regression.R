@@ -15,6 +15,7 @@ district <- unlist(data.frame(chic$district))
 month <- unlist(data.frame(chic$month))
 weekday <- unlist(data.frame(chic$day_of_week))
 date <- unlist(data.frame(chic$date))
+year = unlist(data.frame(chic$year))
 
 # Create the dependent variable
 count <- unlist(data.frame(chic$crime_count))
@@ -41,3 +42,13 @@ count <- unlist(data.frame(chic_five$crime_count))
 
 
 negbinmodel_five <- glm.nb(count ~ hour + district + month + weekday, data = chic_five)
+
+
+
+################################################################################ Creating Model with All Variables Included to Derive Summary Statistics ################################################################################ 
+
+negbinmodel <- glm.nb(count ~ hour + district + month + weekday + date + year, data = chic)
+
+options(max.print=1000000)
+
+summary(negbinmodel)

@@ -116,6 +116,25 @@ cramer_v <- assocstats(table(chic$date, chic$month))$cramer
 
 print(cramer_v)
 
+################################################################################ Getting Correlation Between Black Pop % and Crime Rate ################################################################################ 
+# Pearson Correlation
+district_crimes <- c()
+
+for (i in unique(chic$district)){
+  district_crimes <- append(district_crimes, sum(chic[chic$district == i,]$crime_count))
+}
+
+district_crime_rates <- district_crimes/dem$population
+
+cor(district_crime_rates, blackpop, method = "pearson")
+
+
+
+# r-squared Correlation
+model <- lm(district_crime_rates ~ blackpop)
+
+summary(model)
+
 ################################################################################ Generating EDA Graphs ################################################################################ 
 
 a <- read.csv("crimecountbytypeanddayofyear.csv")
@@ -129,7 +148,6 @@ h <- read.csv("crimecountbydistrict.csv")
 i <- read.csv("crimeratebyyear.csv")
 j <- read.csv("crimeratebydayofweek.csv")
 k <- read.csv("crimeratebymonth.csv")
-
 
 
 ggplot(data = a, aes(x = day_of_year)) +
@@ -249,3 +267,4 @@ ggplot(data = j, aes(x = c(1, 2, 3, 4, 5, 6, 7), y = crime_rate, fill = "line"))
   theme(legend.position = "none") +
   scale_x_continuous(breaks = seq(1, 7, 1)) +
   scale_y_continuous(breaks = seq(0, 40000, 2000), limits = c(0, 40000))
+

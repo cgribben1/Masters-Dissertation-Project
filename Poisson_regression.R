@@ -15,6 +15,7 @@ district <- unlist(data.frame(chic$district))
 month <- unlist(data.frame(chic$month))
 weekday <- unlist(data.frame(chic$day_of_week))
 date <- unlist(data.frame(chic$date))
+chic$year = factor(chic$year)
 
 # Create the dependent variable
 count <- unlist(data.frame(chic$crime_count))
@@ -26,3 +27,5 @@ summary(poissonmodel)
 
 # Use model to predict crime count
 predict(poissonmodel, newdata = data.frame(hour = factor(2), district = factor(1), month = factor(7), weekday = factor(5)), type = "response")
+
+summary(poissonmodel)
